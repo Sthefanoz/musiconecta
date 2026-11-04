@@ -1,0 +1,28 @@
+# Blueprint de Render: New → Blueprint → elegir este repositorio.
+services:
+  - type: web
+    name: musiconecta
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: MusiConecta
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_LOCALE
+        value: es
+      - key: APP_TIMEZONE
+        value: America/Guayaquil
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: LOG_CHANNEL
+        value: stderr
