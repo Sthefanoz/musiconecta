@@ -5,7 +5,8 @@ Plataforma web para contratar músicos solistas y bandas, con un **panel de aná
 > Proyecto de **ISWZ3101 – Ingeniería Web (UDLA)** · Sthefano Zambrano
 > Laravel 13 (MVC) · PHP 8.3 · SQLite · Blade · Tailwind CSS 4 · Chart.js
 
-**Demo en línea:** _(pendiente: se completa al desplegar en Render)_
+**Demo en línea:** https://musiconecta.onrender.com
+_(plan gratuito de Render: si el servicio estaba dormido, la primera carga tarda ~50 s)_
 
 ---
 
