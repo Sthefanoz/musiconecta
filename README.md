@@ -21,8 +21,6 @@ _(plan gratuito de Render: si el servicio estaba dormido, la primera carga tarda
 7. [Arquitectura MVC](#arquitectura-mvc)
 8. [Modelo de datos](#modelo-de-datos)
 9. [Pruebas](#pruebas)
-10. [Despliegue](#despliegue)
-
 ---
 
 ## Cuentas de prueba
@@ -139,14 +137,3 @@ php artisan test
 ```
 
 17 pruebas / 112 aserciones: reparto de banda, disponibilidad, transiciones, fórmulas del Core, percentil, cédula (módulo 10, duplicada, sin JS), Provincia → Ciudad, CRUD del admin y recorrido de todas las pantallas por rol.
-
-## Despliegue
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Sthefanoz/musiconecta)
-
-El repositorio incluye `Dockerfile`, `docker/start.sh` y `render.yaml`:
-
-1. En [Render](https://render.com): botón de arriba, o **New → Blueprint** y elegir este repositorio.
-2. Render construye la imagen (Vite + Composer + PHP 8.3/Apache), genera `APP_KEY`, crea la base SQLite, ejecuta migraciones y siembra los datos de demostración.
-
-> En el plan gratuito el disco es efímero: al reiniciarse el servicio la base se vuelve a sembrar, lo cual es adecuado para una demo.
