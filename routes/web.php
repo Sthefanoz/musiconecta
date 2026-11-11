@@ -93,6 +93,7 @@ Route::middleware(['auth', 'rol:admin'])->prefix('admin')->name('admin.')->group
     Route::post('/musicos', [Admin\MusicoController::class, 'store'])->name('musicos.store');
     Route::get('/musicos/{musico}/editar', [Admin\MusicoController::class, 'edit'])->name('musicos.edit');
     Route::put('/musicos/{musico}', [Admin\MusicoController::class, 'update'])->name('musicos.update');
+    Route::delete('/musicos/{musico}', [Admin\MusicoController::class, 'destroy'])->name('musicos.destroy');
     Route::patch('/musicos/{musico}/verificar', [Admin\MusicoController::class, 'verificar'])->name('musicos.verificar');
 
     Route::get('/ciudades', [Admin\CiudadController::class, 'index'])->name('ciudades.index');

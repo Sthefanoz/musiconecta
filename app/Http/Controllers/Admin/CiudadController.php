@@ -16,11 +16,14 @@ class CiudadController extends Controller
 {
     public function index(Request $request): View
     {
-        $ciudades = Ciudad::with('provincia')->withCount('musicos')
-            ->when($request->query('provincia_id'), fn ($q, $v) => $q->where('provincia_id', $v))
+        // select() va antes de withCount(): si va después, borra la columna musicos_count.
+        $ciudades = Ciudad::query()
+            ->select('ciudades.*')
+            ->with('provincia')
+            ->withCount('musicos')
+            ->when($request->query('provincia_id'), fn ($q, $v) => $q->where('ciudades.provincia_id', $v))
             ->join('provincias', 'provincias.id', '=', 'ciudades.provincia_id')
             ->orderBy('provincias.nombre')->orderBy('ciudades.nombre')
-            ->select('ciudades.*')
             ->get();
 
         return view('admin.ciudades', [

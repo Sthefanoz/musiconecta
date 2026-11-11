@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
-/** CRUD genérico de los catálogos: géneros, ciudades, tipos de servicio y tipos de evento. */
+/** CRUD genérico de los catálogos: géneros, provincias, tipos de servicio y tipos de evento. */
 class CatalogoController extends Controller
 {
     public const CATALOGOS = [
@@ -41,7 +41,7 @@ class CatalogoController extends Controller
         $datos = $request->validate(['nombre' => ['required', 'string', 'max:100', Rule::unique($modelo->getTable(), 'nombre')]]);
         $cfg['modelo']::create($datos);
 
-        return back()->with('ok', ucfirst($cfg['singular']).' creado.');
+        return back()->with('ok', 'Se agregó «'.$datos['nombre'].'» a '.mb_strtolower($cfg['titulo']).'.');
     }
 
     public function update(Request $request, string $catalogo, int $id): RedirectResponse
@@ -51,20 +51,21 @@ class CatalogoController extends Controller
         $datos = $request->validate(['nombre' => ['required', 'string', 'max:100', Rule::unique($item->getTable(), 'nombre')->ignore($id)]]);
         $item->update($datos);
 
-        return back()->with('ok', ucfirst($cfg['singular']).' actualizado.');
+        return back()->with('ok', 'Se guardó «'.$item->nombre.'».');
     }
 
     public function destroy(string $catalogo, int $id): RedirectResponse
     {
         $cfg = $this->config($catalogo);
+        $item = $cfg['modelo']::findOrFail($id);
 
         try {
-            $cfg['modelo']::findOrFail($id)->delete();
+            $item->delete();
         } catch (QueryException) {
-            return back()->with('error', 'No se puede eliminar: hay registros que lo utilizan.');
+            return back()->with('error', 'No se puede eliminar «'.$item->nombre.'»: hay registros que lo utilizan.');
         }
 
-        return back()->with('ok', ucfirst($cfg['singular']).' eliminado.');
+        return back()->with('ok', 'Se eliminó «'.$item->nombre.'».');
     }
 
     private function config(string $catalogo): array

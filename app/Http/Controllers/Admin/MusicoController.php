@@ -80,6 +80,29 @@ class MusicoController extends Controller
         return redirect()->route('admin.musicos.index')->with('ok', 'Músico '.$musico->nombre_artistico.' actualizado.');
     }
 
+    /**
+     * Elimina un músico solo si no tiene historial. Si ya participó en contrataciones, lidera bandas
+     * o es integrante de alguna, borrarlo alteraría las comparativas del Core: se rechaza.
+     */
+    public function destroy(Musico $musico): RedirectResponse
+    {
+        $motivos = array_filter([
+            $musico->repartos()->exists() || $musico->contrataciones()->exists() ? 'tiene contrataciones registradas' : null,
+            $musico->bandasLideradas()->exists() ? 'lidera una banda' : null,
+            $musico->bandas()->exists() ? 'es integrante de una banda' : null,
+        ]);
+
+        if ($motivos) {
+            return back()->with('error', 'No se puede eliminar a '.$musico->nombre_artistico.': '.implode(', ', $motivos)
+                .'. Su historial alimenta las comparativas del Core.');
+        }
+
+        $nombre = $musico->nombre_artistico;
+        DB::transaction(fn () => $musico->user->delete()); // la FK en cascada borra también el perfil de músico
+
+        return redirect()->route('admin.musicos.index')->with('ok', 'Se eliminó a '.$nombre.'.');
+    }
+
     /** Verifica (o retira la verificación) para mostrar la insignia en el perfil. */
     public function verificar(Musico $musico): RedirectResponse
     {

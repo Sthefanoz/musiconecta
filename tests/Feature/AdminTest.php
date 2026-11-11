@@ -109,6 +109,46 @@ class AdminTest extends TestCase
         $this->assertDatabaseHas('canciones', ['titulo' => 'Chola cuencana']);
     }
 
+    public function test_listado_de_ciudades_cuenta_sus_musicos(): void
+    {
+        $this->actingAs($this->admin)->post('/admin/musicos', $this->datos());
+
+        $ciudades = $this->get('/admin/ciudades')->assertOk()->viewData('ciudades');
+        $this->assertSame(1, $ciudades->firstWhere('nombre', 'Quito')->musicos_count);
+        $this->assertSame(0, $ciudades->firstWhere('nombre', 'Cuenca')->musicos_count);
+    }
+
+    public function test_no_se_elimina_una_provincia_que_tiene_ciudades(): void
+    {
+        $pichincha = Provincia::where('nombre', 'Pichincha')->first();
+
+        $this->actingAs($this->admin)->delete("/admin/catalogos/provincias/{$pichincha->id}")
+            ->assertSessionHas('error');
+        $this->assertDatabaseHas('provincias', ['id' => $pichincha->id]);
+    }
+
+    public function test_eliminar_musico_sin_historial(): void
+    {
+        $this->actingAs($this->admin)->post('/admin/musicos', $this->datos());
+        $musico = Musico::where('cedula', '1710034065')->first();
+
+        $this->delete("/admin/musicos/{$musico->id}")->assertSessionHas('ok');
+
+        $this->assertDatabaseMissing('musicos', ['id' => $musico->id]);
+        $this->assertDatabaseMissing('users', ['email' => 'rosa@t.test']);
+    }
+
+    public function test_no_se_elimina_un_musico_con_historial(): void
+    {
+        $this->actingAs($this->admin)->post('/admin/musicos', $this->datos());
+        $musico = Musico::where('cedula', '1710034065')->first();
+        \App\Models\Banda::create(['lider_id' => $musico->id, 'genero_id' => $musico->genero_principal_id, 'ciudad_id' => $musico->ciudad_id, 'nombre' => 'B']);
+
+        $this->delete("/admin/musicos/{$musico->id}")->assertSessionHas('error');
+
+        $this->assertDatabaseHas('musicos', ['id' => $musico->id]);
+    }
+
     public function test_solo_el_admin_entra_a_la_administracion(): void
     {
         $cliente = User::create(['name' => 'C', 'email' => 'c@t.test', 'password' => 'password', 'rol' => 'cliente']);

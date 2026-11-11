@@ -37,6 +37,9 @@
                         <form method="POST" action="{{ route('admin.musicos.verificar', $m) }}">@csrf @method('PATCH')
                             <button class="btn btn-sm {{ $m->verificado ? 'btn-light' : 'btn-success' }}">{{ $m->verificado ? 'Quitar verificación' : 'Verificar' }}</button>
                         </form>
+                        <form method="POST" action="{{ route('admin.musicos.destroy', $m) }}" onsubmit="return confirm('¿Eliminar a {{ addslashes($m->nombre_artistico) }}?')">@csrf @method('DELETE')
+                            <button class="btn btn-sm btn-light text-red-700">Eliminar</button>
+                        </form>
                     </div>
                 </td>
             </tr>

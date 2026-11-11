@@ -57,7 +57,7 @@ El Core compara a cada músico con **los músicos de su mismo género principal 
 
 | Módulo (rol administrador) | Ruta | Cómo alimenta al Core |
 |---|---|---|
-| **Músicos** (CRUD + verificación) | `/admin/musicos` | Género principal + ciudad definen el grupo de comparación (comparativa *g*). La cédula identifica a quién se le paga cada reparto. |
+| **Músicos** (CRUD + verificación; solo se eliminan si no tienen historial) | `/admin/musicos` | Género principal + ciudad definen el grupo de comparación (comparativa *g*). La cédula identifica a quién se le paga cada reparto. |
 | **Canciones** (CRUD) | `/admin/canciones` | El estilo de cada canción reparte el ingreso en la comparativa *Repertorio solicitado* (*e*). Muestra cuántas veces se pidió cada una. |
 | **Ciudades** (CRUD, ligadas a provincia) | `/admin/ciudades` | Segmentan la comparación con el género. |
 | **Catálogos**: géneros, provincias, tipos de servicio, tipos de evento | `/admin/catalogos/{catálogo}` | Agrupan las comparativas *c* (servicio) y *f* (tipo de evento). |
@@ -136,4 +136,4 @@ Reglas de negocio: comisión 5 %, anticipo 30 % (`config/musiconecta.php`); fluj
 php artisan test
 ```
 
-17 pruebas / 112 aserciones: reparto de banda, disponibilidad, transiciones, fórmulas del Core, percentil, cédula (módulo 10, duplicada, sin JS), Provincia → Ciudad, CRUD del admin y recorrido de todas las pantallas por rol.
+21 pruebas / 122 aserciones: reparto de banda, disponibilidad, transiciones, fórmulas del Core, percentil, cédula (módulo 10, duplicada, sin JS), Provincia → Ciudad, CRUD del admin y recorrido de todas las pantallas por rol.
